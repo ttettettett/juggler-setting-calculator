@@ -2,9 +2,12 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
     <title>ジャグラー設定判別ツール</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             display: flex;
             flex-direction: column;
@@ -25,7 +28,7 @@
             min-width: 100px;
         }
         input[type="number"], select {
-            width: 100%;
+            max-width: 100%; /* 修正 */
             height: 100%;
             font-size: 24px;
             text-align: center;
@@ -51,6 +54,21 @@
             font-size: 32px;
             padding: 15px;
         }
+        
+        .select-reset-container {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+        }
+        .reset-button {
+            font-size: 24px;
+            padding: 5px 15px;
+            cursor: pointer;
+            background-color: lightgray;
+            border: none;
+            margin-left: 10px;
+        }
+        
         .game {
             background-color: lightblue;
         }
@@ -67,6 +85,7 @@
             }
             input[type="number"], select {
                 font-size: 16px;
+                width: 100%; /* 追加 */
             }
             button {
                 font-size: 20px;
@@ -76,143 +95,148 @@
     </style>
 </head>
 <body>
-    <div>
+    <div class="select-reset-container">
         <select id="model" onchange="updateSettings()" style="width: 100%;">
             <option value="model1">アイムジャグラーEX（6号機）</option>
             <option value="model2">マイジャグラーV</option>
-            <option value="model3">ファンキージャグラー2</option>
-        </select>
-    </div>
-    <table>
-        <tr>
-            <th></th>
-            <th>カウント</th>
-            <th>確率</th>
-            <th>設定</th>
-        </tr>
-        <tr>
-            <th style="background-color: lightblue;">ゲーム</th>
-            <td><input type="number" id="gameCount" value="0"></td>
-            <td>-</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <th style="background-color: lightcoral;">BB</th>
-            <td><input type="number" id="bbCount" value="0"></td>
-            <td id="bbProbability">-</td>
-            <td id="bbSetting">-</td>
-        </tr>
-        <tr>
-            <th style="background-color: lightgreen;">RB</th>
-            <td><input type="number" id="rbCount" value="0"></td>
-	        <td id="rbProbability">-</td>
-	        <td id="rbSetting">-</td>
-	    </tr>
-	    <tr>
-	        <th>合算 (BB+RB)</th>
-	        <td id="total"></td>
-	        <td id="totalProbability">-</td>
-	        <td id="totalSetting">-</td>
-	    </tr>
-	</table>
-	<div class="button-container">
-	    <button class="game" onclick="incrementGame(10)">ゲーム+10</button>
-	    <button class="game" onclick="incrementGame(100)">ゲーム+100</button>
-	    <button class="bb" onclick="incrementBB(1)">BB+1</button>
-	    <button class="rb" onclick="incrementRB(1)">RB+1</button>
-	</div>
-	<script>
-	    const modelSettings = {
-	        model1: [
-	            { bb: 1 / 273.1, rb: 1 / 439.8, total: 1 / 168.5 },
-	            { bb: 1 / 269.7, rb: 1 / 399.6, total: 1 / 161.0 },
-	            { bb: 1 / 269.7, rb: 1 / 331.0, total: 1 / 148.6 },
-	            { bb: 1 / 259.0, rb: 1 / 315.1, total: 1 / 142.2 },
-	            { bb: 1 / 259.0, rb: 1 / 255.0, total: 1 / 128.5 },
-	            { bb: 1 / 255.0, rb: 1 / 255.0, total: 1 / 127.5 }
-	        ],
-	        model2: [
-	            { bb: 1 / 273.1, rb: 1 / 409.6, total: 1 / 163.8 },
-	            { bb: 1 / 270.8, rb: 1 / 385.5, total: 1 / 159.1 },
-	            { bb: 1 / 266.4, rb: 1 / 336.1, total: 1 / 148.6 },
-	            { bb: 1 / 254.0, rb: 1 / 290.0, total: 1 / 135.4 },
-	            { bb: 1 / 240.1, rb: 1 / 268.6, total: 1 / 126.8 },
-	            { bb: 1 / 229.1, rb: 1 / 229.1, total: 1 / 114.6 }
-	        ],
-	        model3: [
-	            { bb: 1 / 266.4, rb: 1 / 439.8, total: 1 / 165.9 },
-	            { bb: 1 / 259.0, rb: 1 / 407.1, total: 1 / 158.3 },
-	            { bb: 1 / 256.0, rb: 1 / 366.1, total: 1 / 150.7 },
-	            { bb: 1 / 249.2, rb: 1 / 322.8, total: 1 / 140.6 },
-	            { bb: 1 / 240.1, rb: 1 / 299.3, total: 1 / 133.2 },
-	            { bb: 1 / 219.9, rb: 1 / 262.1, total: 1 / 119.5 }
-	        ]
-	    };
-	    let currentSettings = modelSettings["model1"];
+<option value="model3">ファンキージャグラー2</option>
+</select>
+<button class="reset-button" onclick="resetCounts()">リセット</button>
+</div>
+<table>
+<tr>
+<th></th>
+<th>カウント</th>
+<th>確率</th>
+<th>設定</th>
+</tr>
+<tr>
+<th style="background-color: lightblue;">ゲーム</th>
+<td><input type="number" id="gameCount" value=""></td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<th style="background-color: lightcoral;">BB</th>
+<td><input type="number" id="bbCount" value=""></td>
+<td id="bbProbability">-</td>
+<td id="bbSetting">-</td>
+</tr>
+<tr>
+<th style="background-color: lightgreen;">RB</th>
+<td><input type="number" id="rbCount" value=""></td>
+<td id="rbProbability">-</td>
+<td id="rbSetting">-</td>
+</tr>
+<tr>
+<th>合算</th>
+<td id="total"></td>
+<td id="totalProbability">-</td>
+<td id="totalSetting">-</td>
+</tr>
+</table>
+<div class="button-container">
+<button class="game" onclick="incrementGame(10)">ゲーム+10</button>
+<button class="game" onclick="incrementGame(100)">ゲーム+100</button>
+<button class="bb" onclick="incrementBB(1)">BB+1</button>
+<button class="rb" onclick="incrementRB(1)">RB+1</button>
+</div>
+<script>
+const modelSettings = {
+model1: [
+{ bb: 1 / 273.1, rb: 1 / 439.8, total: 1 / 168.5 },
+{ bb: 1 / 269.7, rb: 1 / 399.6, total: 1 / 161.0 },
+{ bb: 1 / 269.7, rb: 1 / 331.0, total: 1 / 148.6 },
+{ bb: 1 / 259.0, rb: 1 / 315.1, total: 1 / 142.2 },
+{ bb: 1 / 259.0, rb: 1 / 255.0, total: 1 / 128.5 },
+{ bb: 1 / 255.0, rb: 1 / 255.0, total: 1 / 127.5 }
+],
+model2: [
+{ bb: 1 / 273.1, rb: 1 / 409.6, total: 1 / 163.8 },
+{ bb: 1 / 270.8, rb: 1 / 385.5, total: 1 / 159.1 },
+{ bb: 1 / 266.4, rb: 1 / 336.1, total: 1 / 148.6 },
+{ bb: 1 / 254.0, rb: 1 /290.0, total: 1 / 135.4 },
+{ bb: 1 / 240.1, rb: 1 / 268.6, total: 1 / 126.8 },
+{ bb: 1 / 229.1, rb: 1 / 229.1, total: 1 / 114.6 }
+],
+model3: [
+{ bb: 1 / 266.4, rb: 1 / 439.8, total: 1 / 165.9 },
+{ bb: 1 / 259.0, rb: 1 / 407.1, total: 1 / 158.3 },
+{ bb: 1 / 256.0, rb: 1 / 366.1, total: 1 / 150.7 },
+{ bb: 1 / 249.2, rb: 1 / 322.8, total: 1 / 140.6 },
+{ bb: 1 / 240.1, rb: 1 / 299.3, total: 1 / 133.2 },
+{ bb: 1 / 219.9, rb: 1 / 262.1, total: 1 / 119.5 }
+]
+};
+let currentSettings = modelSettings["model1"];
+    function updateSettings() {
+        const modelSelect = document.getElementById("model");
+        const selectedModel = modelSelect.value;
+        currentSettings = modelSettings[selectedModel];
+        resetCounts(); // カウントをリセット
+    }
 
-	    function incrementGame(value) {
-	        const gameCountInput = document.getElementById("gameCount");
-	        const newValue = parseInt(gameCountInput.value) + value;
-	        gameCountInput.value = newValue;
-	        updateSettings();
-	    }
+    // カウントをリセットする関数
+    function resetCounts() {
+        document.getElementById("gameCount").value = "";
+        document.getElementById("bbCount").value = "";
+        document.getElementById("rbCount").value = "";
+        calculate(); // 再計算を行う
+    }
 
-	    function incrementBB(value) {
-	        const bbCountInput = document.getElementById("bbCount");
-	        const newValue = parseInt(bbCountInput.value) + value;
-	        bbCountInput.value = newValue;
-	        updateSettings();
-	    }
+    function incrementGame(value) {
+        const gameCountInput = document.getElementById("gameCount");
+        const newValue = (parseInt(gameCountInput.value) || 0) + value;
+        gameCountInput.value = newValue;
+        calculate(); // 更新：再計算を行う
+    }
 
-	    function incrementRB(value) {
-	        const rbCountInput = document.getElementById("rbCount");
-	        const newValue = parseInt(rbCountInput.value) + value;
-	        rbCountInput.value = newValue;
-	        updateSettings();
-	    }
+    function incrementBB(value) {
+        const bbCountInput = document.getElementById("bbCount");
+        const newValue = (parseInt(bbCountInput.value) || 0) + value;
+        bbCountInput.value = newValue;
+        calculate(); // 更新：再計算を行う
+    }
 
-	    function updateSettings() {
-	        const modelSelect = document.getElementById("model");
-	        const selectedModel = modelSelect.value;
-	        currentSettings = modelSettings[selectedModel];
-	        calculate();
-	    }
+    function incrementRB(value) {
+        const rbCountInput = document.getElementById("rbCount");
+        const newValue = (parseInt(rbCountInput.value) || 0) + value;
+        rbCountInput.value = newValue;
+        calculate(); // 更新：再計算を行う
+    }
 
-	    function calculate() {
-	        const gameCount = parseInt(document.getElementById("gameCount").value) || 0;
-	        const bbCount = parseInt(document.getElementById("bbCount").value) || 0;
-	        const rbCount = parseInt(document.getElementById("rbCount").value) || 0;
+    function calculate() {
+        const gameCount = parseInt(document.getElementById("gameCount").value) || 0;
+        const bbCount = parseInt(document.getElementById("bbCount").value) || 0;
+        const rbCount = parseInt(document.getElementById("rbCount").value) || 0;
 
-	        const bbProbability = gameCount ? bbCount / gameCount : 0;
-	        const rbProbability = gameCount ? rbCount / gameCount : 0;
-	        const totalProbability = gameCount ? (bbCount + rbCount) / gameCount : 0;
+        const bbProbability = gameCount ? bbCount / gameCount : 0;
+        const rbProbability = gameCount ? rbCount / gameCount : 0;
+        const totalProbability = gameCount ? (bbCount + rbCount) / gameCount : 0;
 
-	        document.getElementById("bbProbability").innerText = (bbProbability * 100).toFixed(2) + "%";
-	        document.getElementById("rbProbability").innerText = (rbProbability * 100).toFixed(2) + "%";
-	        document.getElementById("totalProbability").innerText = (totalProbability * 100).toFixed(2) + "%";
+        document.getElementById("bbProbability").innerText = (bbProbability * 100).toFixed(2) + "%";
+        document.getElementById("rbProbability").innerText = (rbProbability * 100).toFixed(2) + "%";
+        document.getElementById("totalProbability").innerText = (totalProbability * 100).toFixed(2) + "%";
+        document.getElementById("total").innerText = bbCount + rbCount;
 
-	        document.getElementById("total").innerText = bbCount + rbCount;
+        document.getElementById("bbSetting").innerText = findSetting(bbProbability, "bb");
+        document.getElementById("rbSetting").innerText = findSetting(rbProbability, "rb");
+        document.getElementById("totalSetting").innerText = findSetting(totalProbability, "total");
+    }
 
-	        document.getElementById("bbSetting").innerText = findSetting(bbProbability, "bb");
-	        document.getElementById("rbSetting").innerText = findSetting(rbProbability, "rb");
-	        document.getElementById("totalSetting").innerText = findSetting(totalProbability, "total");
-	    }
+    function findSetting(value, type) {
+        let minDiff = Infinity;
+        let setting = 0;
 
-	    function findSetting(value, type) {
-	        let minDiff = Infinity;
-	        let setting = 0;
-
-	        currentSettings.forEach((config, index) => {
-	            const diff = Math.abs(value - config[type]);
-	            if (diff < minDiff) {
-	                minDiff = diff;
-	                setting = index + 1;
-	            }
-	        });
-
-	        return setting;
-	    }
-	</script>
+        currentSettings.forEach((config, index) => {
+            const diff = Math.abs(value - config[type]);
+            if (diff < minDiff) {
+                minDiff = diff;
+                setting = index + 1;
+            }
+        });
+        return setting;
+    }
+</script>
 </body>
 </html>
-
