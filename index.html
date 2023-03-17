@@ -8,12 +8,13 @@
         * {
             box-sizing: border-box;
         }
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            margin: 0;
-        }
+		body {
+		    display: flex;
+		    flex-direction: column;
+		    min-height: 100vh;
+		    overflow: auto;
+		    margin: 0;
+		}
         table {
             width: 100%;
             border-collapse: collapse;
@@ -39,13 +40,14 @@
             height: 80px;
         }
         
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            padding: 5px;
-            flex-grow: 1;
-        }
+		.button-container {
+		    display: flex;
+		    flex-direction: column;
+		    gap: 5px;
+		    padding: 5px;
+		    flex-grow: 1;
+		    max-height: 50%; /* 追加 */
+		}
         button {
             flex-grow: 1;
             width: 100%;
