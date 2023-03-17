@@ -226,19 +226,35 @@
             document.getElementById("totalSetting").innerText = findSetting(totalProbability, "total");
         }
     
-        function findSetting(value, type) {
-            let minDiff = Infinity;
-            let setting = 0;
-    
-            currentSettings.forEach((config, index) => {
-                const diff = Math.abs(value - config[type]);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    setting = index + 1;
-                }
-            });
-            return setting;
+function findSetting(value, type) {
+    let minDiff = Infinity;
+    let settings = [];
+
+    currentSettings.forEach((config, index) => {
+        const diff = Math.abs(value - config[type]);
+        if (diff < minDiff) {
+            minDiff = diff;
+            settings = [index + 1];
+        } else if (diff === minDiff) {
+            settings.push(index + 1);
         }
+    });
+
+    let formattedSettings = [];
+    let i = 0;
+    while (i < settings.length) {
+        const start = settings[i];
+        let end = start;
+        while (i < settings.length - 1 && settings[i + 1] === end + 1) {
+            end = settings[i + 1];
+            i++;
+        }
+        formattedSettings.push(end === start ? `${start}` : `${start}-${end}`);
+        i++;
+    }
+
+    return formattedSettings.join(',');
+}
   </script>
 </body>
 </html>
