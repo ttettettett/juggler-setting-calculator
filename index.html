@@ -1,57 +1,69 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
-  <title>ジャグラー設定判別ツール</title>
-  <style>
-    * {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <title>ジャグラー設定判別ツール</title>
+    <style>
+        * {
             box-sizing: border-box;
         }
+
         html {
-		    height: 100%;
-		    margin: 0;
-		}
-		body {
-		  display: flex;
-		  flex-direction: column;
-		  height: 100%;
-		  margin: 0;
-		  overflow: hidden;
-		}
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 10px;
         }
-		th, td {
-		    border: 1px solid black;
-		    text-align: center;
-		    padding: 10px;
-		    font-size: 24px;
-		    white-space: nowrap;
-		    width: 25%; /* 追加 */
-		}
-        input[type="number"], select {
-            max-width: 100%; /* 修正 */
+
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 10px;
+            font-size: 24px;
+            white-space: nowrap;
+            width: 25%;
+            /* 追加 */
+        }
+
+        input[type="number"],
+        select {
+            max-width: 100%;
+            /* 修正 */
             height: 100%;
             font-size: 24px;
             text-align: center;
             border: none;
         }
-        
+
         select {
             height: 80px;
         }
-        
-		.button-container {
-		    display: flex;
-		    flex-direction: column;
-		    gap: 5px;
-		    padding: 5px;
-		    flex-grow: 1;
-		    max-height: 50%; /* 追加 */
-		}
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 5px;
+            flex-grow: 1;
+            max-height: 50%;
+            /* 追加 */
+        }
+
         button {
             flex-grow: 1;
             width: 100%;
@@ -60,12 +72,13 @@
             font-size: 32px;
             padding: 15px;
         }
-        
+
         .select-reset-container {
             display: flex;
             justify-content: flex-start;
             width: 100%;
         }
+
         .reset-button {
             font-size: 24px;
             padding: 5px 15px;
@@ -74,111 +87,131 @@
             border: none;
             margin-left: 10px;
         }
-        
+
         .game {
             background-color: lightblue;
         }
+
         .bb {
             background-color: lightcoral;
         }
+
         .rb {
             background-color: lightgreen;
         }
+
         @media screen and (max-width: 600px) {
-            th, td {
+
+            th,
+            td {
                 font-size: 16px;
                 min-width: 60px;
             }
-            input[type="number"], select {
+
+            input[type="number"],
+            select {
                 font-size: 16px;
-                width: 100%; /* 追加 */
+                width: 100%;
+                /* 追加 */
             }
+
             button {
                 font-size: 20px;
                 padding: 10px;
             }
         }
-  </style>
+    </style>
 </head>
+
 <body>
-  <div class="select-reset-container"> <select id="model" onchange="updateSettings()" style="width: 100%;">
+    <div class="select-reset-container"> <select id="model" onchange="updateSettings()" style="width: 100%;">
             <option value="model1">アイムジャグラーEX</option>
             <option value="model2">マイジャグラーV</option>
-<option value="model3">ファンキージャグラー2</option>
-</select> <button class="reset-button" onclick="resetCounts()">リセット</button> </div>
-  <table>
-    <tr>
-      <th></th>
-      <th>カウント</th>
-      <th>確率</th>
-      <th>設定</th>
-    </tr>
-    <tr>
-      <th style="background-color: lightblue;">ゲーム</th>
-      <td><input type="number" pattern="\d*" id="gameCount" value="" oninput="calculate()"></td>
-      <td>-</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <th style="background-color: lightcoral;">BB</th>
-      <td><input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
-      <td id="bbProbability">-</td>
-      <td id="bbSetting">-</td>
-    </tr>
-    <tr>
-      <th style="background-color: lightgreen;">RB</th>
-      <td><input type="number" pattern="\d*" id="rbCount" value="" oninput="calculate()"></td>
-      <td id="rbProbability">-</td>
-      <td id="rbSetting">-</td>
-    </tr>
-    <tr>
-      <th>合算</th>
-      <td id="total"></td>
-      <td id="totalProbability">-</td>
-      <td id="totalSetting">-</td>
-    </tr>
-  </table>
-  <div class="button-container"> 
-  
-  <button class="game" onclick="incrementGame(1000)">ゲーム+1000</button> 
-  <button class="game" onclick="incrementGame(100)">ゲーム+100</button> 
-  <button class="game" onclick="incrementGame(10)">ゲーム+10</button> 
-  <button class="bb" onclick="incrementBB(1)">BB+1</button> <button class="rb" onclick="incrementRB(1)">RB+1</button> </div>
-  <script>
-    const modelSettings = {
-    model1: [
-    { bb: 1 / 273.1, rb: 1 / 439.8, total: 1 / 168.5 },
-    { bb: 1 / 269.7, rb: 1 / 399.6, total: 1 / 161.0 },
-    { bb: 1 / 269.7, rb: 1 / 331.0, total: 1 / 148.6 },
-    { bb: 1 / 259.0, rb: 1 / 315.1, total: 1 / 142.2 },
-    { bb: 1 / 259.0, rb: 1 / 255.0, total: 1 / 128.5 },
-    { bb: 1 / 255.0, rb: 1 / 255.0, total: 1 / 127.5 }
-    ],
-    model2: [
-    { bb: 1 / 273.1, rb: 1 / 409.6, total: 1 / 163.8 },
-    { bb: 1 / 270.8, rb: 1 / 385.5, total: 1 / 159.1 },
-    { bb: 1 / 266.4, rb: 1 / 336.1, total: 1 / 148.6 },
-    { bb: 1 / 254.0, rb: 1 /290.0, total: 1 / 135.4 },
-    { bb: 1 / 240.1, rb: 1 / 268.6, total: 1 / 126.8 },
-    { bb: 1 / 229.1, rb: 1 / 229.1, total: 1 / 114.6 }
-    ],
-    model3: [
-    { bb: 1 / 266.4, rb: 1 / 439.8, total: 1 / 165.9 },
-    { bb: 1 / 259.0, rb: 1 / 407.1, total: 1 / 158.3 },
-    { bb: 1 / 256.0, rb: 1 / 366.1, total: 1 / 150.7 },
-    { bb: 1 / 249.2, rb: 1 / 322.8, total: 1 / 140.6 },
-    { bb: 1 / 240.1, rb: 1 / 299.3, total: 1 / 133.2 },
-    { bb: 1 / 219.9, rb: 1 / 262.1, total: 1 / 119.5 }
-    ]
-    };
-    let currentSettings = modelSettings["model1"];
+            <option value="model3">ファンキージャグラー2</option>
+            <option value="model4">ハッピージャグラーV III</option> <!-- 追加 -->
+        </select> <button class="reset-button" onclick="resetCounts()">リセット</button> </div>
+    <table>
+        <tr>
+            <th></th>
+            <th>カウント</th>
+            <th>確率</th>
+            <th>設定</th>
+        </tr>
+        <tr>
+            <th style="background-color: lightblue;">ゲーム</th>
+            <td><input type="number" pattern="\d*" id="gameCount" value="" oninput="calculate()"></td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th style="background-color: lightcoral;">BB</th>
+            <td><input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
+            <td id="bbProbability">-</td>
+            <td id="bbSetting">-</td>
+        </tr>
+        <tr>
+            <th style="background-color: lightgreen;">RB</th>
+            <td><input type="number" pattern="\d*" id="rbCount" value="" oninput="calculate()"></td>
+            <td id="rbProbability">-</td>
+            <td id="rbSetting">-</td>
+        </tr>
+        <tr>
+            <th>合算</th>
+            <td id="total"></td>
+            <td id="totalProbability">-</td>
+            <td id="totalSetting">-</td>
+        </tr>
+    </table>
+    <div class="button-container">
+
+        <button class="game" onclick="incrementGame(1000)">ゲーム+1000</button>
+        <button class="game" onclick="incrementGame(100)">ゲーム+100</button>
+        <button class="game" onclick="incrementGame(10)">ゲーム+10</button>
+        <button class="bb" onclick="incrementBB(1)">BB+1</button> <button class="rb"
+            onclick="incrementRB(1)">RB+1</button>
+    </div>
+    <script>
+        const modelSettings = {
+            model1: [
+                { bb: 1 / 273.1, rb: 1 / 439.8, total: 1 / 168.5 },
+                { bb: 1 / 269.7, rb: 1 / 399.6, total: 1 / 161.0 },
+                { bb: 1 / 269.7, rb: 1 / 331.0, total: 1 / 148.6 },
+                { bb: 1 / 259.0, rb: 1 / 315.1, total: 1 / 142.2 },
+                { bb: 1 / 259.0, rb: 1 / 255.0, total: 1 / 128.5 },
+                { bb: 1 / 255.0, rb: 1 / 255.0, total: 1 / 127.5 }
+            ],
+            model2: [
+                { bb: 1 / 273.1, rb: 1 / 409.6, total: 1 / 163.8 },
+                { bb: 1 / 270.8, rb: 1 / 385.5, total: 1 / 159.1 },
+                { bb: 1 / 266.4, rb: 1 / 336.1, total: 1 / 148.6 },
+                { bb: 1 / 254.0, rb: 1 / 290.0, total: 1 / 135.4 },
+                { bb: 1 / 240.1, rb: 1 / 268.6, total: 1 / 126.8 },
+                { bb: 1 / 229.1, rb: 1 / 229.1, total: 1 / 114.6 }
+            ],
+            model3: [
+                { bb: 1 / 266.4, rb: 1 / 439.8, total: 1 / 165.9 },
+                { bb: 1 / 259.0, rb: 1 / 407.1, total: 1 / 158.3 },
+                { bb: 1 / 256.0, rb: 1 / 366.1, total: 1 / 150.7 },
+                { bb: 1 / 249.2, rb: 1 / 322.8, total: 1 / 140.6 },
+                { bb: 1 / 240.1, rb: 1 / 299.3, total: 1 / 133.2 },
+                { bb: 1 / 219.9, rb: 1 / 262.1, total: 1 / 119.5 }
+            ], model4: [
+                { bb: 1 / 273.1, rb: 1 / 397.2, total: 1 / 161.8 },
+                { bb: 1 / 270.8, rb: 1 / 362.1, total: 1 / 154.9 },
+                { bb: 1 / 263.2, rb: 1 / 332.7, total: 1 / 146.9 },
+                { bb: 1 / 254.0, rb: 1 / 300.6, total: 1 / 137.7 },
+                { bb: 1 / 239.2, rb: 1 / 273.1, total: 1 / 127.5 },
+                { bb: 1 / 226.0, rb: 1 / 256.0, total: 1 / 120.0 }
+            ]
+        };
+        let currentSettings = modelSettings["model1"];
         function updateSettings() {
             const modelSelect = document.getElementById("model");
             const selectedModel = modelSelect.value;
             currentSettings = modelSettings[selectedModel];
             resetCounts(); // カウントをリセット
         }
-    
+
         // カウントをリセットする関数
         function resetCounts() {
             document.getElementById("gameCount").value = "";
@@ -186,80 +219,81 @@
             document.getElementById("rbCount").value = "";
             calculate(); // 再計算を行う
         }
-    
+
         function incrementGame(value) {
             const gameCountInput = document.getElementById("gameCount");
             const newValue = (parseInt(gameCountInput.value) || 0) + value;
             gameCountInput.value = newValue;
             calculate(); // 更新：再計算を行う
         }
-    
+
         function incrementBB(value) {
             const bbCountInput = document.getElementById("bbCount");
             const newValue = (parseInt(bbCountInput.value) || 0) + value;
             bbCountInput.value = newValue;
             calculate(); // 更新：再計算を行う
         }
-    
+
         function incrementRB(value) {
             const rbCountInput = document.getElementById("rbCount");
             const newValue = (parseInt(rbCountInput.value) || 0) + value;
             rbCountInput.value = newValue;
             calculate(); // 更新：再計算を行う
         }
-    
-    	function fractionFormat(value) {
-    	    const denominator = Math.round(1 / value);
-    	    return value ? `1/${denominator}` : "-";
-    	}
+
+        function fractionFormat(value) {
+            const denominator = Math.round(1 / value);
+            return value ? `1/${denominator}` : "-";
+        }
         function calculate() {
             const gameCount = parseInt(document.getElementById("gameCount").value) || 0;
             const bbCount = parseInt(document.getElementById("bbCount").value) || 0;
             const rbCount = parseInt(document.getElementById("rbCount").value) || 0;
-    
+
             const bbProbability = gameCount ? bbCount / gameCount : 0;
             const rbProbability = gameCount ? rbCount / gameCount : 0;
             const totalProbability = gameCount ? (bbCount + rbCount) / gameCount : 0;
-    
-    		document.getElementById("bbProbability").innerText = gameCount ? fractionFormat(bbProbability) : "-";
-    		document.getElementById("rbProbability").innerText = gameCount ? fractionFormat(rbProbability) : "-";
-    		document.getElementById("totalProbability").innerText = gameCount ? fractionFormat(totalProbability) : "-";
+
+            document.getElementById("bbProbability").innerText = gameCount ? fractionFormat(bbProbability) : "-";
+            document.getElementById("rbProbability").innerText = gameCount ? fractionFormat(rbProbability) : "-";
+            document.getElementById("totalProbability").innerText = gameCount ? fractionFormat(totalProbability) : "-";
             document.getElementById("total").innerText = bbCount + rbCount;
-    
+
             document.getElementById("bbSetting").innerText = findSetting(bbProbability, "bb");
             document.getElementById("rbSetting").innerText = findSetting(rbProbability, "rb");
             document.getElementById("totalSetting").innerText = findSetting(totalProbability, "total");
         }
-    
-function findSetting(value, type) {
-    let minDiff = Infinity;
-    let settings = [];
 
-    currentSettings.forEach((config, index) => {
-        const diff = Math.abs(value - config[type]);
-        if (diff < minDiff) {
-            minDiff = diff;
-            settings = [index + 1];
-        } else if (diff === minDiff) {
-            settings.push(index + 1);
+        function findSetting(value, type) {
+            let minDiff = Infinity;
+            let settings = [];
+
+            currentSettings.forEach((config, index) => {
+                const diff = Math.abs(value - config[type]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    settings = [index + 1];
+                } else if (diff === minDiff) {
+                    settings.push(index + 1);
+                }
+            });
+
+            let formattedSettings = [];
+            let i = 0;
+            while (i < settings.length) {
+                const start = settings[i];
+                let end = start;
+                while (i < settings.length - 1 && settings[i + 1] === end + 1) {
+                    end = settings[i + 1];
+                    i++;
+                }
+                formattedSettings.push(end === start ? `${start}` : `${start}-${end}`);
+                i++;
+            }
+
+            return formattedSettings.join(',');
         }
-    });
-
-    let formattedSettings = [];
-    let i = 0;
-    while (i < settings.length) {
-        const start = settings[i];
-        let end = start;
-        while (i < settings.length - 1 && settings[i + 1] === end + 1) {
-            end = settings[i + 1];
-            i++;
-        }
-        formattedSettings.push(end === start ? `${start}` : `${start}-${end}`);
-        i++;
-    }
-
-    return formattedSettings.join(',');
-}
-  </script>
+    </script>
 </body>
+
 </html>
