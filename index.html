@@ -176,6 +176,8 @@
         <button class="rb"  onclick="incrementRB(1)">RB+1</button>
     </div>
     <script>
+        document.addEventListener("dblclick", function(e){ e.preventDefault();}, { passive: false });
+        
         var value1 = localStorage.getItem('Key')
         var value2 = localStorage.saveKey;
         const modelSettings = {
