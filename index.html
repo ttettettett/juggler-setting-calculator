@@ -56,17 +56,19 @@
 
         .button-container {
             display: flex;
-            flex-direction: column;
+            //flex-direction: column;
+            flex-wrap:wrap;
             gap: 5px;
             padding: 5px;
             flex-grow: 1;
-            max-height: 50%;
+            height: 50%;
+            width: 100%;
             /* 追加 */
         }
 
         button {
             flex-grow: 1;
-            width: 100%;
+            width: 32%;
             border: none;
             cursor: pointer;
             font-size: 32px;
@@ -169,8 +171,12 @@
         <button class="game" onclick="incrementGame(1000)">ゲーム+1000</button>
         <button class="game" onclick="incrementGame(100)">ゲーム+100</button>
         <button class="game" onclick="incrementGame(10)">ゲーム+10</button>
-        <button class="bb" onclick="incrementBB(1)">BB+1</button> <button class="rb"
-            onclick="incrementRB(1)">RB+1</button>
+        <button class="bb" onclick="incrementBB(1)">BB+10</button>
+        <button class="bb" onclick="incrementBB(1)">BB+5</button>
+        <button class="bb" onclick="incrementBB(1)">BB+1</button>
+        <button class="rb"  onclick="incrementRB(1)">RB+10</button>
+        <button class="rb"  onclick="incrementRB(1)">RB+5</button>
+        <button class="rb"  onclick="incrementRB(1)">RB+1</button>
     </div>
     <script>
         var value1 = localStorage.getItem('Key')
