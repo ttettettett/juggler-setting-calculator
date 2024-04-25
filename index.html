@@ -137,19 +137,19 @@
     <table>
         <tr>
             <th></th>
-            <th>カウント</th>
+            <th>回数</th>
             <th>確率</th>
             <th>設定</th>
         </tr>
         <tr>
-            <th style="background-color: lightblue;">ゲーム</th>
+            <th style="background-color: lightblue;">G</th>
             <td><input type="number" pattern="\d*" id="gameCount" value="" oninput="calculate()"></td>
             <td>-</td>
             <td>-</td>
         </tr>
         <tr>
             <th style="background-color: lightcoral;">BB</th>
-            <td><input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
+            <td>input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
             <td id="bbProbability">-</td>
             <td id="bbSetting">-</td>
         </tr>
@@ -168,9 +168,9 @@
     </table>
     <div class="button-container">
 
-        <button class="game" onclick="incrementGame(1000)">ゲーム+1000</button>
-        <button class="game" onclick="incrementGame(100)">ゲーム+100</button>
-        <button class="game" onclick="incrementGame(10)">ゲーム+10</button>
+        <button class="game" onclick="incrementGame(1000)">G+1000</button>
+        <button class="game" onclick="incrementGame(100)">G+100</button>
+        <button class="game" onclick="incrementGame(10)">G+10</button>
         <button class="bb" onclick="incrementBB(1)">BB+10</button>
         <button class="bb" onclick="incrementBB(1)">BB+5</button>
         <button class="bb" onclick="incrementBB(1)">BB+1</button>
