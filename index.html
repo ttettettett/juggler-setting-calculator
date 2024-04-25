@@ -173,6 +173,8 @@
             onclick="incrementRB(1)">RB+1</button>
     </div>
     <script>
+        var value1 = localStorage.getItem('Key')
+        var value2 = localStorage.saveKey;
         const modelSettings = {
             model1: [
                 { bb: 1 / 273.1, rb: 1 / 439.8, total: 1 / 168.5 },
@@ -234,7 +236,13 @@
             document.getElementById("gameCount").value = "";
             document.getElementById("bbCount").value = "";
             document.getElementById("rbCount").value = "";
-            calculate(); // 再計算を行う
+            document.getElementById("bbProbability").innerText = "-";
+            document.getElementById("rbProbability").innerText = "-";
+            document.getElementById("totalProbability").innerText = "-";
+            document.getElementById("total").innerText = "";
+            document.getElementById("bbSetting").innerText = "-";
+            document.getElementById("rbSetting").innerText = "-";
+            document.getElementById("totalSetting").innerText = "-";
         }
 
         function incrementGame(value) {
