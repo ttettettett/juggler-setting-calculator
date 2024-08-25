@@ -26,6 +26,9 @@
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        .table-container {
             margin-right: 5px;
             margin-left: 5px;
             margin-bottom: 0px;
@@ -41,7 +44,7 @@
             width: 25%;
         }
 
-        input[type="number"]{
+        input[type="number"] {
             max-width: 100%;
             height: 100%;
             font-size: 24px;
@@ -55,7 +58,7 @@
 
         .button-container {
             display: flex;
-            flex-wrap:wrap;
+            flex-wrap: wrap;
             gap: 5px;
             padding: 5px;
             flex-grow: 1;
@@ -104,12 +107,11 @@
 
             th,
             td {
-                font-size:20px;
+                font-size: 20px;
                 min-width: 60px;
             }
 
-            input[type="number"]
-            {
+            input[type="number"] {
                 font-size: 20px;
                 width: 100%;
             }
@@ -137,49 +139,51 @@
             <option value="model6">ジャグラーガールズ</option>
             <option value="model7">ミスタージャグラー</option>
         </select> <button class="reset-button" onclick="resetCounts()">リセット</button> </div>
-    <table>
-        <tr>
-            <th></th>
-            <th>回数</th>
-            <th>確率</th>
-            <th>設定</th>
-        </tr>
-        <tr>
-            <th style="background-color: lightblue;">G</th>
-            <td><input type="number" pattern="\d*" id="gameCount" value="" oninput="calculate()"></td>
-            <td>-</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <th style="background-color: lightcoral;">BB</th>
-            <td><input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
-            <td id="bbProbability">-</td>
-            <td id="bbSetting">-</td>
-        </tr>
-        <tr>
-            <th style="background-color: lightgreen;">RB</th>
-            <td><input type="number" pattern="\d*" id="rbCount" value="" oninput="calculate()"></td>
-            <td id="rbProbability">-</td>
-            <td id="rbSetting">-</td>
-        </tr>
-        <tr>
-            <th>合算</th>
-            <td id="total"></td>
-            <td id="totalProbability">-</td>
-            <td id="totalSetting">-</td>
-        </tr>
-    </table>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th></th>
+                <th>回数</th>
+                <th>確率</th>
+                <th>設定</th>
+            </tr>
+            <tr>
+                <th style="background-color: lightblue;">G</th>
+                <td><input type="number" pattern="\d*" id="gameCount" value="" oninput="calculate()"></td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <th style="background-color: lightcoral;">BB</th>
+                <td><input type="number" pattern="\d*" id="bbCount" value="" oninput="calculate()"></td>
+                <td id="bbProbability">-</td>
+                <td id="bbSetting">-</td>
+            </tr>
+            <tr>
+                <th style="background-color: lightgreen;">RB</th>
+                <td><input type="number" pattern="\d*" id="rbCount" value="" oninput="calculate()"></td>
+                <td id="rbProbability">-</td>
+                <td id="rbSetting">-</td>
+            </tr>
+            <tr>
+                <th>合算</th>
+                <td id="total"></td>
+                <td id="totalProbability">-</td>
+                <td id="totalSetting">-</td>
+            </tr>
+        </table>
+    </div>
     <div class="button-container">
         <button class="game" onclick="incrementGame(1000)">+1000</button>
         <button class="game" onclick="incrementGame(100)">+100</button>
         <button class="bb" onclick="incrementBB(5)">+5</button>
         <button class="bb" onclick="incrementBB(1)">+1</button>
-        <button class="rb"  onclick="incrementRB(5)">+5</button>
-        <button class="rb"  onclick="incrementRB(1)">+1</button>
+        <button class="rb" onclick="incrementRB(5)">+5</button>
+        <button class="rb" onclick="incrementRB(1)">+1</button>
     </div>
     <script>
-        document.addEventListener("dblclick", function(e){ e.preventDefault();}, { passive: false });
-        
+        document.addEventListener("dblclick", function (e) { e.preventDefault(); }, { passive: false });
+
         var value1 = localStorage.getItem('Key')
         var value2 = localStorage.saveKey;
         const modelSettings = {
